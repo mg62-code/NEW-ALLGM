@@ -1,0 +1,26 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+data/*.json
+data/*.db
+media/*
+!media/.gitkeep
+.pytest_cache/
+
+# Secrets, Tokens und Zugangsdaten – niemals committen
+IGAA*.txt
+*IGAA*.txt
+ge-solar-home-network.txt
+*ge-solar*.txt
+
+# Logs (koennen Tokens enthalten)
+*.log
+uvicorn.err.log
+
+# Lokale Playwright-/Browser-Testdateien
+.playwright-mcp/
+
+# Lokale Notizen und temporaere Artefakte
+*.bak
+*.tmp

@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "google-vertex/gemini-2.5-pro",
+  "small_model": "google-vertex/gemini-2.5-flash",
+  "provider": {
+    "google-vertex": {
+      "options": {
+        "project": "project-0911409a-d416-4c2b-801",
+        "location": "us-central1"
+      }
+    }
+  },
+  "default_agent": "dev-ali",
+  "instructions": [
+    ".opencode/docs/00-index.md",
+    ".opencode/docs/01-prozesshandbuch.md",
+    ".opencode/docs/02-rollen-und-szenarien.md",
+    ".opencode/docs/03-opencode-und-tools.md",
+    ".opencode/docs/04-technische-projektstandards.md",
+    ".opencode/docs/05-bestandsaufnahme-und-vertraege.md",
+    ".opencode/docs/06-agenten.md",
+    ".opencode/docs/07-prozesshandbuch-recherche.md",
+    ".opencode/docs/08-prozesshandbuch-security.md",
+    ".opencode/docs/09-prozesshandbuch-frontend.md",
+    ".opencode/docs/10-prozesshandbuch-backend-daten.md",
+    ".opencode/docs/11-prozesshandbuch-gis-aviation.md",
+    ".opencode/docs/12-prozesshandbuch-ux-ui-brand.md",
+    ".opencode/docs/13-prozesshandbuch-teamkoordination.md",
+    ".opencode/docs/19-prozesshandbuch-finops-cloud.md",
+    "README.md",
+    "Skill Anweisung aeronewsFRA.txt",
+    "Anweisung Instagram OpenCode Aufbau.txt",
+    "Aufbau MusterVorlage automation.txt"
+  ],
+  "mcp": {
+    "aeronewsfra-instagram": {
+      "type": "local",
+      "command": ["python", "mcp_server.py"],
+      "enabled": true
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "enabled": true
+    }
+  }
+}

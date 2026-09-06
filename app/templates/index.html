@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AeroNewsFRA Instagram</title>
+  <style>
+    :root { color-scheme: dark; font-family: Arial, sans-serif; background: #111827; color: #f3f4f6; }
+    body { max-width: 960px; margin: 0 auto; padding: 32px 18px; }
+    h1 { margin-bottom: 6px; } .muted { color: #9ca3af; }
+    section { background: #1f2937; border: 1px solid #374151; border-radius: 12px; padding: 20px; margin: 18px 0; }
+    label { display:block; margin: 12px 0 6px; color:#d1d5db; } textarea, input { width:100%; box-sizing:border-box; background:#111827; color:#f3f4f6; border:1px solid #4b5563; border-radius:7px; padding:10px; }
+    textarea { min-height:130px; } button, .button { display:inline-block; background:#f59e0b; color:#111827; border:0; border-radius:7px; padding:10px 14px; margin-top:12px; text-decoration:none; font-weight:bold; cursor:pointer; }
+    .danger { background:#dc2626; color:white; } .ok { color:#86efac; } .error { color:#fca5a5; }
+    table { width:100%; border-collapse:collapse; } td, th { padding:10px 6px; border-bottom:1px solid #374151; text-align:left; vertical-align:top; }
+  </style>
+</head>
+<body>
+  <h1>AeroNewsFRA</h1><p class="muted">Lokaler Instagram-Connector mit manueller Freigabe</p>
+  {% if message %}<p class="ok">{{ message }}</p>{% endif %}
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  <section>
+    <h2>Verbindung</h2>
+    {% if account %}<p class="ok">Verbunden mit @{{ account.username }} ({{ account.user_id }})</p>
+    {% else %}<p class="muted">Noch kein Instagram-Konto verbunden.</p>{% endif %}
+    {% if configured %}<a class="button" href="/auth/login">Instagram verbinden</a>{% else %}<p class="error">META_APP_ID und META_APP_SECRET fehlen in .env.</p>{% endif %}
+  </section>
+  <section>
+    <h2>Bild-Entwurf</h2>
+    <p class="muted">Das Bild muss für die Meta API öffentlich über HTTPS erreichbar sein.</p>
+    <form method="post" action="/drafts">
+      <label for="image_url">Bild-URL</label><input id="image_url" name="image_url" type="url" placeholder="https://.../bild.jpg" required>
+      <label for="caption">Caption</label><textarea id="caption" name="caption" maxlength="2200" required></textarea>
+      <button type="submit">Entwurf speichern</button>
+    </form>
+  </section>
+  <section><h2>Entwürfe</h2>
+    {% if drafts %}<table><tr><th>ID</th><th>Caption / Status</th><th>Aktion</th></tr>
+    {% for draft in drafts %}<tr><td>{{ draft.id }}</td><td>{{ draft.caption }}<br><span class="muted">{{ draft.status }}{% if draft.error %}: {{ draft.error }}{% endif %}</span></td><td>
+      {% if draft.status in ['draft', 'container_failed'] %}<form method="post" action="/drafts/{{ draft.id }}/prepare"><button type="submit">Vorschau vorbereiten</button></form>{% elif draft.status == 'container_created' %}<form method="post" action="/drafts/{{ draft.id }}/publish"><input type="hidden" name="confirm" value="yes"><button class="danger" type="submit">Jetzt veröffentlichen</button></form>{% endif %}
+    </td></tr>{% endfor %}</table>{% else %}<p class="muted">Noch keine Entwürfe.</p>{% endif %}
+  </section>
+</body></html>

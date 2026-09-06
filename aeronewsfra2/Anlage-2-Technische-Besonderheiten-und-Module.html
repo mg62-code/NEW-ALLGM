@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><title>Anlage 2 | Technische Besonderheiten und Module</title><link rel="stylesheet" href="anlagen.css"></head>
+<body>
+<section class="page cover"><div><div class="brand">AeroNewsFRA 2.0 / Anlage 2</div><h1>Technische Besonderheiten und Entwicklungsbausteine</h1><p class="lead">Modulplan für die besonderen technischen Funktionen: eigene Kartenplattform, ADS-B-Datenstation, Flugspuren, Replay, Ereigniserkennung, KI-Automation, Monitoring und skalierbare Produktmodule.</p></div><div class="meta">Version 1.0 · August 2026<br>Technische Ergänzung zum professionellen Bauplan</div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 01</div><h2>Besondere Produktidee</h2></div><div class="doc">Differenzierung</div></div><div class="content">
+<p>AeroNewsFRA soll keine globale Tracking-Kopie werden. Die Besonderheit ist die Kombination aus regionalem Empfang, verständlicher Einordnung und nachvollziehbarer Datenherkunft.</p>
+<div class="callout"><strong>Technischer Kern:</strong> Der Nutzer sieht nicht nur ein Flugzeug auf einer Karte. Er sieht, warum diese Bewegung für Frankfurt interessant ist, wie sicher die Daten sind und welche Quelle sie belegt.</div>
+<div class="grid3"><div class="card"><strong>Local Sensor</strong><p class="small">Eigener ADS-B-Empfang aus der Region, mit Uptime, Reichweite und Datenalter.</p></div><div class="card"><strong>Geo Intelligence</strong><p class="small">Echte Karte, Flugspuren, Korridore, Replay, Wetter und Spotting-Kontext.</p></div><div class="card"><strong>Editorial Engine</strong><p class="small">Ereignisse werden erkannt, aber erst nach Prüfung als News veröffentlicht.</p></div></div>
+<h3>Modulübersicht</h3><table class="table"><tr><th>Modul</th><th>Besonderheit</th><th>Priorität</th></tr><tr><td>Map Core</td><td>echte geografische Karte mit Layer-Architektur</td><td>P0</td></tr><tr><td>Receiver Gateway</td><td>signierter ADS-B-Upload vom Mini-PC</td><td>P0</td></tr><tr><td>Flight Store</td><td>historische Flüge und Spuren</td><td>P1</td></tr><tr><td>Event Engine</td><td>seltene und ungewöhnliche Bewegungen</td><td>P1</td></tr><tr><td>Replay</td><td>Zeitreise durch Flugverkehr</td><td>P2</td></tr><tr><td>AI Studio</td><td>Faktenpaket zu Content-Entwürfen</td><td>P2</td></tr><tr><td>Public API</td><td>kontrollierte Daten für Frontend und Partner</td><td>P2</td></tr><tr><td>Premium Alerts</td><td>individuelle Benachrichtigungen</td><td>P3</td></tr></table>
+<h3>Prinzip</h3><p>Jedes Modul erhält eine stabile Schnittstelle. Ein Kartenwechsel darf die Receiver-Software nicht brechen; ein KI-Modell darf nicht das Datenmodell definieren.</p>
+</div><div class="footer"><span>AeroNewsFRA · Technische Module</span><span>01</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 02</div><h2>Map Core: eigene Kartenplattform</h2></div><div class="doc">MapLibre / GeoJSON</div></div><div class="content">
+<h3>Technischer Aufbau</h3><div class="flow"><div class="node"><b>Tile Layer</b>Basiskarte</div><div class="arrow">→</div><div class="node"><b>GeoJSON</b>Airport / Spotting</div><div class="arrow">→</div><div class="node"><b>Flight Layer</b>Live und Historie</div><div class="arrow">→</div><div class="node"><b>Interaction</b>Filter / Detail</div></div>
+<h3>Eigene Besonderheiten</h3><ul><li>MapLibre oder Leaflet als austauschbare Kartenabstraktion.</li><li>Eigene GeoJSON-Dateien für Runways, Terminals, Cargo und Spotting-Punkte.</li><li>Live-Flüge als GeoJSON-FeatureCollection oder effizienter Vector-Source.</li><li>Marker-Clustering bei hoher Dichte und viewportbezogene Abfragen.</li><li>Richtungspfeile anhand des Tracks und Höhenfarbskala mit Legende.</li><li>Flugspur als LineString mit zeitlicher Gewichtung.</li><li>Detailpanel statt unübersichtlicher Popup-Flut.</li><li>URL-State für Zoom, Center, Zeitraum und Filter.</li><li>Fallback-Karte bei fehlender Tile-Verbindung.</li></ul>
+<h3>Layer- und Datenregeln</h3><table class="table"><tr><th>Regel</th><th>Umsetzung</th></tr><tr><td>Datenalter</td><td>Marker nach Schwellenwert färben und ausblenden.</td></tr><tr><td>Lizenz</td><td>Attribution dauerhaft sichtbar; Tile-Nutzung dokumentieren.</td></tr><tr><td>Performance</td><td>Viewport-Abfrage, Clustering, Throttling und Cache.</td></tr><tr><td>Privatsphäre</td><td>Empfangsstandort runden oder versetzen; keine exakte Position.</td></tr><tr><td>Barrierefreiheit</td><td>Liste als Alternative zur Karte; Marker per Tastatur erreichbar.</td></tr></table>
+<div class="risk"><strong>Nicht machen:</strong> Die Karte darf nicht nur eine optische Demo sein. Jede Geometrie braucht Quelle und Fehlerzustand.</div>
+</div><div class="footer"><span>AeroNewsFRA · Map Core</span><span>02</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 03</div><h2>Receiver Gateway und ADS-B-Station</h2></div><div class="doc">Edge Computing</div></div><div class="content">
+<h3>Hardware- und Softwarekette</h3><div class="flow"><div class="node"><b>Antenne</b>1090 MHz</div><div class="arrow">→</div><div class="node"><b>SDR</b>Signal</div><div class="arrow">→</div><div class="node"><b>readsb</b>JSON</div><div class="arrow">→</div><div class="node"><b>Uploader</b>Batch</div><div class="arrow">→</div><div class="node"><b>API</b>Ingestion</div></div>
+<h3>Edge-Modul</h3><ul><li>Konfiguration über lokale Datei oder geschützte Umgebungsvariablen.</li><li>Lokale Warteschlange bei Internet-Ausfall.</li><li>Heartbeat getrennt von Positionsdaten.</li><li>Batch-Upload mit Retry und Backoff.</li><li>Signatur oder API-Key pro Station.</li><li>Lokale Uhr per NTP, intern UTC.</li><li>Health-Status für Temperatur, Speicher, Netzwerk und Prozess.</li></ul>
+<h3>Ingestion-Validierung</h3><table class="table"><tr><th>Prüfung</th><th>Beispiel</th><th>Bei Fehler</th></tr><tr><td>Schema</td><td>lat, lon, received_at vorhanden</td><td>ablehnen und loggen</td></tr><tr><td>Bereich</td><td>Koordinaten plausibel</td><td>verwerfen</td></tr><tr><td>Sprung</td><td>keine unrealistische Bewegung</td><td>markieren</td></tr><tr><td>Alter</td><td>Uploadzeit und Empfangszeit</td><td>verspätet markieren</td></tr><tr><td>Duplikat</td><td>gleiche Station/Sequenz</td><td>idempotent ignorieren</td></tr></table>
+<h3>Öffentliche Darstellung</h3><p>Öffentlich werden nur aggregierte Reichweite, Uptime und Datenalter gezeigt. Rohdaten bleiben geschützt und werden nach einer festgelegten Frist gelöscht oder aggregiert.</p><div class="ok"><strong>Abnahme:</strong> Ein Netzwerkausfall erzeugt nach Wiederkehr keine Datenflut. Reihenfolge und Duplikatbehandlung bleiben korrekt.</div>
+</div><div class="footer"><span>AeroNewsFRA · Receiver Gateway</span><span>03</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 04</div><h2>Flight Store, Tracks und Replay</h2></div><div class="doc">Historische Daten</div></div><div class="content">
+<h3>Flight Store</h3><p>Aus Positionsmeldungen werden Flugsegmente gebildet. Eine Bewegung beginnt bei plausibler Aktivität und endet nach einem definierten Zeitraum ohne Empfang. Rohpositionen und redaktionelle Zusammenfassung werden getrennt gespeichert.</p><table class="table"><tr><th>Objekt</th><th>Funktion</th></tr><tr><td>Track point</td><td>Position, Höhe, Geschwindigkeit, Track und Empfangszeit</td></tr><tr><td>Flight session</td><td>zusammengeführte Sichtung eines Callsigns/ICAO24</td></tr><tr><td>Track segment</td><td>vereinfachte Linie für schnelle Kartendarstellung</td></tr><tr><td>Daily aggregate</td><td>Anzahl, Typen, Airlines, Richtungen und Reichweite</td></tr></table>
+<h3>Replay-Modul</h3><div class="flow"><div class="node"><b>Datum</b>Zeitraum wählen</div><div class="arrow">→</div><div class="node"><b>Query</b>Track laden</div><div class="arrow">→</div><div class="node"><b>Timeline</b>Zeit positionieren</div><div class="arrow">→</div><div class="node"><b>Render</b>Marker animieren</div></div><div class="ui"><span class="btn">Live</span><span class="btn">Pause</span><span class="btn">1x</span><span class="btn">5x</span><span class="btn">20x</span><span class="btn">Zeitraum teilen</span><span class="btn">Nur Airline</span><span class="btn">Nur Flugzeugtyp</span></div>
+<h3>Technische Anforderungen</h3><ul><li>UTC intern, lokale Anzeige in Europe/Berlin.</li><li>Interpolation nur visuell; Originalpunkte bleiben unverändert.</li><li>Große Zeiträume werden serverseitig aggregiert.</li><li>Abgebrochene Tracks werden als unvollständig markiert.</li><li>Replay darf nicht als Live-Ansicht missverstanden werden.</li><li>Geteilte URL enthält Datum, Zeitraum und Filter.</li></ul><div class="callout"><strong>Besonderheit:</strong> „Heute vor einem Jahr“ und „So sah der Verkehr während des Ereignisses aus“ erzeugen dauerhaften Content aus eigenen historischen Daten.</div>
+</div><div class="footer"><span>AeroNewsFRA · Flight Store und Replay</span><span>04</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 05</div><h2>Event Engine und intelligente Filter</h2></div><div class="doc">Regelbasiert vor KI</div></div><div class="content">
+<p>Die Event Engine entscheidet nicht über Wahrheit, sondern über technische Auffälligkeit. Sie erzeugt Kandidaten, die anschließend redaktionell und quellenbasiert geprüft werden.</p>
+<h3>Ereignisregeln</h3><table class="table"><tr><th>Event</th><th>Technischer Hinweis</th><th>Risiko</th></tr><tr><td>Seltenes Muster</td><td>Typ oder Airline unter Schwellenwert</td><td>Stammdaten können fehlen</td></tr><tr><td>Erstbesuch</td><td>nicht in eigener Historie</td><td>Historie unvollständig</td></tr><tr><td>Ungewöhnliche Route</td><td>Abweichung vom Korridor</td><td>Route nicht automatisch bekannt</td></tr><tr><td>Holding</td><td>mehrere Schleifen</td><td>nicht automatisch Notfall</td></tr><tr><td>Diversion-Hinweis</td><td>Landung nicht am erwarteten Ziel</td><td>extern bestätigen</td></tr><tr><td>Go-around-Hinweis</td><td>Sink- und erneuter Steigflug</td><td>Radarlücken möglich</td></tr></table>
+<h3>Scoring</h3><div class="code">score = rarity * 0.30
+      + fra_relevance * 0.25
+      + data_quality * 0.20
+      + source_quality * 0.15
+      + novelty * 0.10
+
+if safety_related:
+    require_human_review = true</div>
+<h3>Duplikat- und Gruppierungslogik</h3><ul><li>Gleiche Flugnummer und Zeitfenster zu einem Ereignis zusammenführen.</li><li>Mehrere Quellen demselben Ereignis zuordnen.</li><li>Ähnliche Überschriften erkennen, bevor mehrere Posts entstehen.</li><li>Ein Ereignis kann News, Movement, Story und Alert speisen.</li><li>Regeln versionieren, damit alte Entscheidungen erklärbar bleiben.</li></ul>
+<div class="risk"><strong>Redaktionelle Grenze:</strong> „Ungewöhnlich“ bedeutet nicht „gefährlich“. Notfall- und Sicherheitsbegriffe benötigen eine belastbare externe Quelle.</div>
+</div><div class="footer"><span>AeroNewsFRA · Event Engine</span><span>05</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 06</div><h2>AI Studio und Multi-Channel-Produktion</h2></div><div class="doc">Faktenpaket</div></div><div class="content">
+<h3>Ein Eingang, mehrere Ausgaben</h3><div class="flow"><div class="node"><b>Fact Pack</b>validierte Fakten</div><div class="arrow">→</div><div class="node"><b>Prompt Policy</b>Format und Grenzen</div><div class="arrow">→</div><div class="node"><b>AI Draft</b>Textvarianten</div><div class="arrow">→</div><div class="node"><b>Review</b>menschliche Freigabe</div></div>
+<h3>Ausgaben</h3><div class="grid2"><div class="card"><strong>Website</strong><p>Artikel, Kurzfassung, SEO-Titel, Meta-Description, Alt-Text und verwandte Themen.</p></div><div class="card"><strong>Instagram</strong><p>Caption, Story, Hashtags, Bildbriefing und Entwurf für manuelle Freigabe.</p></div><div class="card"><strong>Video</strong><p>15- bis 45-Sekunden-Skript, Szenenliste und Sprechertext.</p></div><div class="card"><strong>Newsletter</strong><p>Tageszusammenfassung mit Quellenlinks und Datenalter.</p></div></div>
+<h3>Fact-Pack-Schema</h3><div class="code">event_id: EVT-2026-0001
+facts:
+  - label: Flugzeugtyp
+    value: Airbus A350-941
+    source: own_adsb
+    confidence: high
+  - label: Beobachtungszeit
+    value: 2026-08-23T14:22:00Z
+    source: own_adsb
+constraints:
+  require_review: true
+  allowed_claims: [facts_only]</div>
+<h3>Qualitätssicherung</h3><ul><li>Strukturierte Ausgabe statt freier Textantwort.</li><li>Automatischer Vergleich von Zahlen und Namen mit dem Fact Pack.</li><li>Quellenlink muss vorhanden und HTTPS sein.</li><li>Unsicherheit wird als Hinweis ausgegeben.</li><li>Prompt- und Modellversion werden protokolliert.</li><li>Keine automatische Veröffentlichung bei Sicherheitsbezug.</li></ul>
+</div><div class="footer"><span>AeroNewsFRA · AI Studio</span><span>06</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 07</div><h2>Monitoring, PWA, Suche und Einnahmen</h2></div><div class="doc">Produktionsreife</div></div><div class="content">
+<h3>Monitoring-Modul</h3><table class="table"><tr><th>Signal</th><th>Alarm, wenn</th><th>Anzeige</th></tr><tr><td>Receiver</td><td>kein Heartbeat</td><td>offline</td></tr><tr><td>API</td><td>Fehlerquote oder Latenz hoch</td><td>degraded</td></tr><tr><td>News Build</td><td>JSON-Erzeugung scheitert</td><td>letzter guter Stand</td></tr><tr><td>Karte</td><td>Tile-/API-Fehler</td><td>Fallback und Hinweis</td></tr><tr><td>KI</td><td>Faktenvergleich scheitert</td><td>Review blockiert</td></tr></table>
+<h3>PWA und Offline</h3><ul><li>App-Shell, Manifest, Service Worker und installierbares Icon.</li><li>Letzter erfolgreicher Newsstand lokal lesbar.</li><li>Live-Flüge niemals als offline aktuell ausgeben.</li><li>Synchronisierung nach Wiederkehr nur für ungefährliche Entwürfe.</li></ul>
+<h3>Öffentliche Suche</h3><p>Indexiert werden Artikel, Airlines, Flugzeugtypen, Ereignisse und historische Reports. Die Suche unterstützt Volltext, Filter, Datumsbereich, Pagination und teilbare URLs.</p>
+<h3>Einnahmemodule</h3><div class="grid2"><div class="card"><strong>Affiliate</strong><p>Kontextbezogene Technikboxen für Antennen, SDR, Kameras und Spotter-Zubehör.</p></div><div class="card"><strong>Newsletter</strong><p>Automatische Zustellung geprüfter Tages- oder Wochenberichte mit Abmeldung.</p></div><div class="card"><strong>Premium-Alert</strong><p>Benutzer wählen Airline, Typ oder Kategorie; keine Sicherheitsversprechen.</p></div><div class="card"><strong>Digitale Produkte</strong><p>Spotter-Guide, FRA-Datenreport oder Empfangsanleitung als Download.</p></div></div>
+<div class="callout"><strong>Reihenfolge:</strong> Erst Datenqualität und regelmäßige Besucher, dann Monetarisierung. Werbung darf die Karte nicht verlangsamen oder Vertrauen beschädigen.</div>
+</div><div class="footer"><span>AeroNewsFRA · Monitoring und Produktmodule</span><span>07</span></div></section>
+
+<section class="page"><div class="head"><div><div class="kicker">Anlage 2 / 08</div><h2>Implementierungsstandard und Modulabnahme</h2></div><div class="doc">Finale Vorgaben</div></div><div class="content">
+<h3>Modulvertrag</h3><p>Jedes Modul dokumentiert Eingaben, Ausgaben, Fehler, Authentifizierung, Datenhaltung, Lizenz und Kosten. Frontend und Backend kommunizieren über versionierte Schnittstellen.</p><div class="code">Module must define:
+- purpose and user value
+- input/output schema
+- source and timestamp semantics
+- error and offline state
+- privacy and license constraints
+- test cases and acceptance criteria
+- rollback procedure
+- owner and monitoring signal</div>
+<h3>Abnahme pro Modul</h3><ol><li>Normalfall mit echten oder realistisch anonymisierten Testdaten.</li><li>Leere Antwort und fehlende Felder.</li><li>Timeout, Rate-Limit und externer Dienst nicht erreichbar.</li><li>Mobilansicht, Tastatur und Screenreader-Grundbedienung.</li><li>Unplausible oder verspätete Daten.</li><li>Keine unerlaubte Veröffentlichung oder Datenleckage.</li><li>Messbares Ergebnis im Monitoring.</li><li>Dokumentation und Rollback vorhanden.</li></ol>
+<h3>Definition der besonderen Qualität</h3><div class="grid3"><div class="card"><strong>Echt</strong><p class="small">Geografische Karte und eigene Empfangsdaten statt Demo-Grafik.</p></div><div class="card"><strong>Erklärbar</strong><p class="small">Jede Zahl, jeder Score und jeder Artikel hat eine Herkunft.</p></div><div class="card"><strong>Robust</strong><p class="small">Die Seite bleibt bei API-, Tile-, Receiver- und KI-Ausfall benutzbar.</p></div></div>
+<h3>Realisierungsreihenfolge</h3><div class="flow"><div class="node"><b>P0</b>Stabilität und Karte</div><div class="arrow">→</div><div class="node"><b>P1</b>Receiver und API</div><div class="arrow">→</div><div class="node"><b>P2</b>Historie und Events</div><div class="arrow">→</div><div class="node"><b>P3</b>KI und Distribution</div><div class="arrow">→</div><div class="node"><b>P4</b>Premium</div></div>
+<div class="ok"><strong>Endabnahme:</strong> Ein reales Flugzeug kann vom Empfang über die API bis zur Karte verfolgt werden. Ein daraus erzeugter Beitrag bleibt prüfbar, benötigt bei riskanten Inhalten menschliche Freigabe und kann zurückgenommen werden.</div><p class="small">Vor Umsetzung sind aktuelle Nutzungsbedingungen der Karten-, ADS-B-, Wetter-, Social-Media- und Hostinganbieter sowie Datenschutz-, Steuer- und Urheberrechtsfragen separat zu prüfen.</p>
+</div><div class="footer"><span>AeroNewsFRA · Modulabnahme</span><span>08</span></div></section>
+</body></html>

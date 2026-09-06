@@ -1,0 +1,188 @@
+BETREFF: Kostenlosen Instagram-Connector für @aeronewsfra mit OpenCode bauen
+
+ZIEL
+====
+Baue für @aeronewsfra eine lokale Anwendung, die OpenCode mit Instagram über die offizielle Meta Graph API verbindet.
+
+Die Anwendung soll zunächst:
+- Instagram sicher verbinden
+- Captions und Content-Entwürfe verwalten
+- Bildbeiträge mit Vorschau vorbereiten
+- Beiträge erst nach manueller Bestätigung veröffentlichen
+- Veröffentlichungsstatus speichern
+- keine Instagram-Passwörter verwenden
+- ohne kostenpflichtigen Server funktionieren
+
+WICHTIG
+=======
+Die Anwendung läuft zunächst lokal auf einem Windows-PC. Meta API und lokale Entwicklung sollen kostenlos bleiben. Es dürfen keine kostenpflichtigen Dienste eingeplant werden, sofern sie nicht später ausdrücklich bestätigt werden.
+
+Instagram-Passwort, Meta-App-Secret und Zugriffstoken dürfen niemals in den Quellcode oder in Chat-Nachrichten geschrieben werden. Geheimnisse gehören ausschließlich in eine lokale .env-Datei.
+
+AKTUELLER PROJEKTSTAND
+======================
+Der Projektordner enthält bereits:
+- Skill Anweisung aeronewsFRA.txt
+- Aufbau MusterVorlage automation.txt
+
+Diese Dateien müssen als fachliche Regeln für Recherche, Quellenprüfung, Tonalität und Content-Erstellung verwendet werden.
+
+TECHNISCHE ENTSCHEIDUNG
+=======================
+- Sprache: Python
+- Webframework: FastAPI
+- Datenbank: SQLite
+- HTTP/API: requests oder httpx
+- Konfiguration: python-dotenv
+- Lokaler Server: Uvicorn
+- OpenCode-Anbindung: lokaler MCP-Connector
+- Veröffentlichung: zuerst nur nach manueller Bestätigung
+
+GEPLANTE PROJEKTSTRUKTUR
+========================
+aeronewsFRA/
+├── app/
+│   ├── main.py
+│   ├── meta_auth.py
+│   ├── instagram_api.py
+│   ├── database.py
+│   ├── content.py
+│   └── templates/
+├── media/
+├── data/
+├── .env.example
+├── .gitignore
+├── requirements.txt
+├── README.md
+└── mcp_server.py
+
+PHASE 1: INSTAGRAM UND META VORBEREITEN
+=======================================
+1. In Instagram prüfen, ob @aeronewsfra ein Creator- oder Business-Konto ist.
+2. Falls es ein persönliches Konto ist, auf Creator oder Business umstellen.
+3. Falls Meta danach fragt, eine Facebook-Seite mit dem Instagram-Konto verbinden.
+4. Im Browser https://developers.facebook.com öffnen.
+5. Mit dem Meta-Konto anmelden, das Zugriff auf @aeronewsfra besitzt.
+6. Eine neue Meta-App erstellen.
+7. Instagram API beziehungsweise Instagram Login hinzufügen.
+8. Die App zunächst im Entwicklungsmodus lassen.
+9. Das eigene Instagram-Konto als Tester beziehungsweise App-Nutzer hinzufügen.
+10. Als lokale Rücksprungadresse verwenden:
+
+http://127.0.0.1:8000/auth/callback
+
+Die genaue Meta-Menübezeichnung kann je nach aktueller Oberfläche abweichen. Die erforderlichen Berechtigungen sollen zunächst auf Kontoinformationen und Medienveröffentlichung begrenzt werden. Statistiken, Kommentare und Nachrichten erst später ergänzen.
+
+PHASE 2: PYTHON-UMGEBUNG EINRICHTEN
+===================================
+PowerShell im Projektordner öffnen und nacheinander ausführen:
+
+py -3 --version
+py -3 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install fastapi uvicorn python-dotenv requests
+
+Danach requirements.txt erzeugen beziehungsweise aktualisieren und die lokale Anwendung starten mit:
+
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+
+Die lokale Oberfläche ist danach erreichbar unter:
+
+http://127.0.0.1:8000
+
+PHASE 3: SICHERE META-AUTHENTIFIZIERUNG
+======================================
+Implementiere:
+- Login-Schaltfläche Instagram verbinden
+- OAuth-Weiterleitung zu Meta
+- Callback unter /auth/callback
+- Austausch des Authorization-Codes gegen ein Zugriffstoken
+- sichere lokale Speicherung des Tokens
+- Verbindungstest
+- Ermittlung und Speicherung der Instagram-Konto-ID
+- verständliche Fehleranzeigen
+
+Die Meta-API-Version und die aktuell gültigen Berechtigungsnamen müssen anhand der offiziellen Meta-Dokumentation geprüft werden. Keine veralteten Endpunkte blind übernehmen.
+
+PHASE 4: ERSTE INSTAGRAM-FUNKTION
+================================
+Implementiere zunächst nur normale Bildbeiträge:
+- Bild aus media/ auswählen
+- Caption eingeben oder aus einem Entwurf laden
+- Vorschau anzeigen
+- Pflichtfelder und Caption-Länge prüfen
+- Meta-Mediencontainer erstellen
+- Veröffentlichungsstatus abfragen
+- nach manueller Bestätigung veröffentlichen
+- Medien-ID und Ergebnis in SQLite speichern
+
+Für die API muss das Bild über eine öffentlich erreichbare HTTPS-Adresse verfügbar sein. Zunächst kann die Veröffentlichung manuell getestet werden. Für eine kostenlose automatische Lösung später einen temporären Cloudflare-Tunnel verwenden.
+
+PHASE 5: OPENCode-INTEGRATION
+=============================
+Erstelle einen lokalen MCP-Connector mit diesen Funktionen:
+- instagram_connection_status
+- create_caption
+- save_draft
+- preview_post
+- publish_post
+- get_post_status
+- später get_insights
+
+Die Dateien Skill Anweisung aeronewsFRA.txt und Aufbau MusterVorlage automation.txt müssen bei der Content-Erstellung berücksichtigt werden.
+
+OpenCode darf nicht automatisch veröffentlichen, ohne dass die Anwendung vorher eine ausdrückliche Bestätigung erhält.
+
+PHASE 6: ERWEITERUNGEN
+=====================
+Erst nach erfolgreichem Bild-Test ergänzen:
+- Carousel-Beiträge
+- Reels
+- Stories, falls durch die aktuelle Meta-API und Kontoart unterstützt
+- Veröffentlichungsverlauf
+- Insights und Reichweitenwerte
+- geplante lokale Aufgaben über den Windows-Aufgabenplaner
+
+SICHERHEIT
+==========
+- .env niemals committen oder versenden
+- .env in .gitignore aufnehmen
+- keine Tokens im Quellcode
+- keine Passwörter speichern
+- keine echten Zugangsdaten in Dokumentationsbeispiele schreiben
+- Veröffentlichungen protokollieren
+- API-Fehler verständlich behandeln
+- bei unbekanntem Status nicht automatisch erneut veröffentlichen
+
+BETRIEBS- UND TESTVERTRAG (ERGÄNZUNG)
+====================================
+Der Connector bleibt lokal und getrennt von der späteren 2.0-Plattform. Vor
+jedem Meta-Aufruf werden Eingaben, Berechtigungen und Bild-URL validiert;
+Antworten werden schema-geprüft und ohne Token geloggt. 401, 403, 404, 409,
+429, 5xx und Timeout erhalten eigene Statusmeldungen. Bei unbekanntem Status
+wird angehalten.
+
+Abzunehmen sind Neustart, ungültige Caption, fehlende/zu große Datei, abgelaufener
+Token, doppelte Bestätigung, API-Teilfehler und SQLite-Backup/Restore mit
+Testdaten. Ein Test-Publish ist extern und braucht ausdrückliche Freigabe.
+
+AKZEPTANZTESTS
+==============
+Die Umsetzung ist erst erfolgreich, wenn:
+1. Die Anwendung lokal startet.
+2. Meta-Login funktioniert.
+3. @aeronewsfra erkannt wird.
+4. Die Verbindung nach Neustart erhalten bleibt.
+5. Ein Bild als Vorschau angezeigt wird.
+6. Ein Testbeitrag nach Bestätigung veröffentlicht wird.
+7. Die Instagram-Medien-ID gespeichert wird.
+8. Ein API-Fehler nicht zum unkontrollierten Doppelposting führt.
+9. OpenCode einen Entwurf erzeugen kann.
+10. OpenCode nur nach Bestätigung veröffentlichen kann.
+
+ARBEITSREGEL
+============
+Zuerst die lokale Grundanwendung und den Meta-Login bauen. Danach testen. Erst wenn die Verbindung erfolgreich funktioniert, weitere Funktionen ergänzen. Nach jedem Abschnitt den Code prüfen und einen konkreten Test durchführen.
+
+Keine Zugangsdaten per E-Mail weitergeben. Meta-App-Secret und Token nur lokal in der .env-Datei eintragen.
