@@ -1,5 +1,7 @@
 # AeroNewsFRA Instagram Connector
 
+**Zentrales Repository:** `https://github.com/mg62-code/NEW-ALLGM.git`
+
 Lokale FastAPI-Anwendung für den offiziellen Instagram Login über die Meta Graph API. Die Anwendung verwendet keine Instagram-Passwörter und veröffentlicht nur nach manueller Bestätigung.
 
 ## Start unter Windows

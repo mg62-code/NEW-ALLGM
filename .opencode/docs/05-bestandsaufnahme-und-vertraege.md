@@ -35,7 +35,14 @@ Geprüft wurden u. a.:
 **Zielbild:** Website, echte Karte, ADS-B-Plattform, Redaktion, Distribution
 (siehe `15`–`17`).
 
-## 3. Vertrauenszonen
+## 3. Zentrales Code Repository (Single Source of Truth)
+
+Das offizielle und einzige GitHub-Repository für dieses Projekt ist:
+**`https://github.com/mg62-code/NEW-ALLGM.git`**
+
+Alle Commits und Deployments beziehen sich auf dieses Repository.
+
+## 4. Minimaler Datenvertrag (verbindlich)
 
 ```text
 [Browser/UI] --kein Secret--> [Public Pages/static]
