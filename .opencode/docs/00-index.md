@@ -47,6 +47,7 @@ projektweite Standards → Fachquellen → Empfehlungen**.
 | 17 | `17-zielbild-module-und-technik.md` | Module/Technik Zielbild | Modulbau |
 | 18 | `18-prozesskatalog.md` | Prozesskatalog und Ablaufketten | Prozesssuche |
 | 22 | `22-projektstatus-aktuell.md` | Live-Status, URLs, Blocker | Jede neue Session |
+| 99 | `99-agent-improvement-protocol.md` | A-R-C-Protokoll zur Selbstverbesserung | bei Agenten-Entwicklung |
 
 ## Einheitliches Dokumentformat
 
