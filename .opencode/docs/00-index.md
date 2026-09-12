@@ -46,6 +46,7 @@ projektweite Standards → Fachquellen → Empfehlungen**.
 | 16 | `16-zielbild-seiten-und-bedienung.md` | Seiten/Bedienung Zielbild | Portal-UI |
 | 17 | `17-zielbild-module-und-technik.md` | Module/Technik Zielbild | Modulbau |
 | 18 | `18-prozesskatalog.md` | Prozesskatalog und Ablaufketten | Prozesssuche |
+| 22 | `22-projektstatus-aktuell.md` | Live-Status, URLs, Blocker | Jede neue Session |
 
 ## Einheitliches Dokumentformat
 
