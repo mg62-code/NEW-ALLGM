@@ -1,6 +1,10 @@
 fastapi>=0.115,<1
 uvicorn[standard]>=0.30,<1
 python-dotenv>=1.0,<2
-requests>=2.32,<3
+requests
+google-cloud-aiplatform
+tqdm
 python-multipart>=0.0.9,<1
 mcp>=1.0,<2
+google-cloud-firestore>=2.16.0,<3
+psycopg2-binary>=2.9.9,<3
